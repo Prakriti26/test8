@@ -1,26 +1,41 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine.
-# See: https://circleci.com/docs/2.0/configuration-reference
-version: 2.1
+orbs:
+  aws-eks: circleci/aws-eks@1.1.0
+  aws-ecr: circleci/aws-ecr@7.0.0
+  aws-cli: circleci/aws-cli@3.1.0
+  node: circleci/node@2.0.2
 
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  say-hello:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
-    docker:
-      - image: cimg/base:stable
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+  deploy-dev:
+    machine:
+      image: ubuntu-2004:202201-02
     steps:
-      - checkout
       - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
-
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+          name: Deploy-Dev.
+          command: ssh ec2-user@13.234.33.67 './test-docker.sh';
+version: 2.1
 workflows:
-  say-hello-workflow:
+  build_and_deploy:
     jobs:
-      - say-hello
+      - aws-ecr/build-and-push-image:
+          account-url: AWS_ECR_URL_DEV
+          aws-access-key-id: AWS_DEV_ACCESS_KEY
+          aws-secret-access-key: AWS_DEV_SECRET_KEY
+          ###context myContext
+          #create-repo: true
+          dockerfile: test8/Dockerfile
+          no-output-timeout: 20m
+          path: .
+          ### ##profile-name: myProfileName
+          region: AWS_REGION
+          repo: test8
+          skip-when-tags-exist: false
+          tag: 'latest,0.1$CIRCLE_BUILD_NUM'
+          filters:
+            branches:
+              only: test8
+      - deploy-dev:
+          requires:
+            - aws-ecr/build-and-push-image
+          filters:
+            branches:
+              only: test8
