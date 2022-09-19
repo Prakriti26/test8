@@ -32,10 +32,10 @@ workflows:
           tag: 'latest,0.1$CIRCLE_BUILD_NUM'
           filters:
             branches:
-              only: test8
+              only: test8_branch1
       - deploy-dev:
           requires:
             - aws-ecr/build-and-push-image
           filters:
             branches:
-              only: test8
+              only: test8_branch1
