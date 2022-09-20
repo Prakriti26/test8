@@ -21,7 +21,7 @@ workflows:
           aws-access-key-id: AWS_DEV_ACCESS_KEY
           aws-secret-access-key: AWS_DEV_SECRET_KEY
           ###context myContext
-          #create-repo: true
+          create-repo: true
           dockerfile: './circleci-project-setup/Dockerfile'
           no-output-timeout: 20m
           path: .
