@@ -27,7 +27,7 @@ workflows:
           path: './test8'
           ### ##profile-name: myProfileName
           region: AWS_REGION
-          repo: test7
+          repo: test8
           #skip-when-tags-exist: false
           #tag: 'latest,0.1$CIRCLE_BUILD_NUM'
           filters:
