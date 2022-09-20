@@ -24,7 +24,7 @@ workflows:
           #create-repo: true
           dockerfile: './circleci-project-setup/Dockerfile'
           no-output-timeout: 20m
-          path: './circleci-project-setup'
+          path: .
           ### ##profile-name: myProfileName
           region: AWS_REGION
           repo: test8
